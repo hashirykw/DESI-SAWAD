@@ -14,7 +14,7 @@ if (document.readyState === 'complete') boot(); else addEventListener('load', bo
 function init() {
   var T = THREE;
   var gl = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  gl.setPixelRatio(Math.min(devicePixelRatio || 1, isMobile() ? 1.6 : 1.8));
+  gl.setPixelRatio(Math.min(devicePixelRatio || 1, isMobile() ? 1.5 : 1.6));
   gl.outputEncoding = T.sRGBEncoding; gl.toneMapping = T.ACESFilmicToneMapping; gl.toneMappingExposure = 1.0;
   gl.shadowMap.enabled = true; gl.shadowMap.type = T.PCFShadowMap;
   gl.setClearColor(0, 0);
@@ -37,7 +37,7 @@ function init() {
     var pm = new T.PMREMGenerator(gl); scene.environment = pm.fromScene(es, .04).texture; pm.dispose();
   })();
   var key = new T.DirectionalLight(0xfff3e4, 1.55); key.position.set(-4.5, 9, 6);
-  key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 7; key.shadow.bias = -.0006;
+  key.castShadow = true; key.shadow.mapSize.set(isMobile() ? 512 : 1024, isMobile() ? 512 : 1024); key.shadow.radius = 7; key.shadow.bias = -.0006;
   var sc = key.shadow.camera; sc.left = -3.5; sc.right = 3.5; sc.top = 3.5; sc.bottom = -3.5; sc.near = 1; sc.far = 30;
   scene.add(key); scene.add(key.target);
   var rim = new T.DirectionalLight(0xffc68a, .9); rim.position.set(6, 3, -7); scene.add(rim);
@@ -123,7 +123,7 @@ function init() {
   /* lid */
   var LID = profile([[.9, 0], [.88, .04], [.78, .12], [.6, .2], [.38, .25], [.18, .27], [.12, .3], [.13, .36], [.18, .42], [.15, .48], [.05, .5], [.001, .505]], 80);
   var lid = new T.Group(); var lidM = new T.Mesh(lathe(LID, 128), clay); lid.add(lidM);
-  var lidIn = new T.Mesh(new T.CircleGeometry(.88, 64), new T.MeshStandardMaterial({ color: 0x3a1a0c, roughness: 1 })); lidIn.rotation.x = Math.PI / 2; lidIn.position.y = .002; lid.add(lidIn);
+  var lidIn = new T.Mesh(new T.CircleGeometry(.88, 64), new T.MeshStandardMaterial({ color: 0x7a3c22, roughness: 1 })); lidIn.rotation.x = Math.PI / 2; lidIn.position.y = .002; lid.add(lidIn);
   lid.position.y = 1.88; handi.add(lid);
   var hSteam = steam(handi, 14, 1.75, .9, 2.2);
   handi.add(softShadow(3.6, .75)); handi.add(catcher(6));
@@ -273,7 +273,7 @@ function init() {
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { z.addEventListener(ev, function () { drag.on = false; }); });
     z.addEventListener('dblclick', function () { lidT = clock.elapsedTime; });
   });
-  var clock = new T.Clock(), auto = 0, lastY = scrollY, lean = 0, running = true, tiltX = TILT.handi, lidT = -10, lidLift = 0;
+  var blank = false, clock = new T.Clock(), auto = 0, lastY = scrollY, lean = 0, running = true, tiltX = TILT.handi, lidT = -10, lidLift = 0;
   document.addEventListener('visibilitychange', function () { running = !document.hidden; if (running) { clock.getDelta(); requestAnimationFrame(loop); } });
   canvas.classList.add('is-on');
   function sm(a, b, x) { var t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
@@ -329,7 +329,7 @@ function init() {
       Object.keys(garn).forEach(function (n) { var g = garn[n], u = g.userData, tg = n === glassFlav ? 1 : 0; u.s += (tg - u.s) * (1 - Math.exp(-dt * 7)); g.scale.setScalar(Math.max(.0001, u.s)); g.visible = u.s > .01; });
       slush.offset.y = (slush.offset.y + dt * .004) % 1;
     }
-    if (cur.s > .01 && any > .002) gl.render(scene, cam); else gl.clear();
+    if (cur.s > .01 && any > .002) { gl.render(scene, cam); blank = false; } else if (!blank) { gl.clear(); blank = true; }
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
