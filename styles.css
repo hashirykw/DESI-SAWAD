@@ -904,3 +904,20 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .pc-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--e-out)}
 .pcard:hover .pc-img img{transform:scale(1.05)}
 .pc-badge{position:absolute;left:12px;bottom:12px;padding:8px 13px;border-radius:999px;background:rgba(20,10,6,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,226,180,.25);font:500 10px/1 var(--f-m);letter-spacing:.16em;text-transform:uppercase;color:#f1dcb3}
+
+/* chatbot shortcut, bottom-right (SMK dock__ai) */
+.ai-fab{position:fixed;z-index:125;right:16px;bottom:calc(14px + var(--safe-b));width:60px;height:60px;border-radius:50%;display:grid;place-items:center;color:var(--gold-ink);
+  background:linear-gradient(135deg,#a97a40,#e6c890 55%,#c49a5c);box-shadow:0 12px 32px -6px rgba(214,177,120,.55),inset 0 1px 0 rgba(255,255,255,.45);
+  transition:transform .4s var(--e-back),opacity .45s var(--e-out),box-shadow .4s}
+.ai-fab svg{width:25px;height:25px;transition:transform .4s var(--e-back)}
+.ai-fab:hover svg{transform:rotate(-8deg)}
+.ai-fab:hover{transform:scale(1.08);box-shadow:0 16px 40px -6px rgba(214,177,120,.75),inset 0 1px 0 rgba(255,255,255,.45)}
+.ai-fab:active{transform:scale(.92)}
+.ai-fab::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--gold);opacity:0;animation:ring2 2.8s ease-out infinite}
+.ai-dot{position:absolute;top:-1px;right:-1px;width:14px;height:14px;border-radius:50%;background:#4fd07a;border:2px solid var(--bg)}
+.ai-tip{position:absolute;right:calc(100% + 12px);top:50%;transform:translate(8px,-50%);padding:9px 14px;border-radius:999px;white-space:nowrap;font:700 13px/1 var(--f-b);color:var(--text);
+  background:var(--glass-card);border:1px solid var(--glass-brd);box-shadow:var(--shadow-sm);opacity:0;pointer-events:none;transition:opacity .35s,transform .45s var(--e-out)}
+.ai-fab:hover .ai-tip{opacity:1;transform:translate(0,-50%)}
+.ai-fab.tuck,body.chat-on .ai-fab{transform:scale(.4);opacity:0;pointer-events:none}
+@media (max-width:860px){.ai-fab{right:12px;bottom:calc(10px + var(--safe-b));width:54px;height:54px}.ai-fab svg{width:23px;height:23px}}
+@media (min-width:720px){.toast{bottom:40px}}

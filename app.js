@@ -102,7 +102,7 @@ function onScroll() {
     if (down && y > 160) { nav.classList.add('hide'); body.classList.add('nav-hidden'); }
     else if (up || y < 80) { nav.classList.remove('hide'); body.classList.remove('nav-hidden'); }
   } else { nav.classList.remove('hide'); body.classList.remove('nav-hidden'); }
-  if (ctrl) { if (isMobile() && down && y > 200) ctrl.classList.add('tuck'); else if (up || y < 120 || !isMobile()) ctrl.classList.remove('tuck'); }
+  [ctrl, $('.ai-fab')].forEach(function (el) { if (!el) return; if (isMobile() && down && y > 200) el.classList.add('tuck'); else if (up || y < 120 || !isMobile()) el.classList.remove('tuck'); });
   if (down || up) lastY = y;
   footFill();
 }
@@ -321,10 +321,10 @@ function welcome() {
 }
 function openChat() {
   closeCart(); closeMenu(); if (chat.classList.contains('on')) return;
-  chat.classList.add('on'); chat.setAttribute('aria-hidden', 'false'); if (isMobile()) { scrim.classList.add('on'); lock(true); }
+  chat.classList.add('on'); chat.setAttribute('aria-hidden', 'false'); body.classList.add('chat-on'); if (isMobile()) { scrim.classList.add('on'); lock(true); }
   if (!chatB.children.length) welcome(); sfx.open(); setTimeout(function () { if (FINE) chatI.focus(); }, 350);
 }
-function closeChat() { if (!chat || !chat.classList.contains('on')) return; chat.classList.remove('on'); chat.setAttribute('aria-hidden', 'true'); if (isMobile()) { if (!drawer.classList.contains('on')) scrim.classList.remove('on'); lock(false); } sfx.close(); }
+function closeChat() { if (!chat || !chat.classList.contains('on')) return; chat.classList.remove('on'); chat.setAttribute('aria-hidden', 'true'); body.classList.remove('chat-on'); if (isMobile()) { if (!drawer.classList.contains('on')) scrim.classList.remove('on'); lock(false); } sfx.close(); }
 DS.openChat = openChat;
 $$('[data-chat]').forEach(function (b) { b.addEventListener('click', openChat); });
 $('[data-close-chat]').addEventListener('click', closeChat);
@@ -425,7 +425,7 @@ function loader() {
   var fill = $('.ldx-fill'), ink = $('.ldx-ink'), gold = $('.ldx-gold'), N = $('#ldN');
   var L = $$('.ldx-ink .ldx-w i'), sub = $('.ldx-ink .ldx-s span'), metas = $$('.ldx-m');
   gsap.set(L, { yPercent: 118 }); gsap.set(sub, { yPercent: 120 }); gsap.set(metas, { autoAlpha: 0, y: 10 });
-  gsap.set(['.nav', '.ctrl'], { autoAlpha: 0 });
+  gsap.set(['.nav', '.ctrl', '.ai-fab'], { autoAlpha: 0 });
   var st = { lv: 0, ps: 1.34 };
   function paint() { gold.style.setProperty('--lv', st.lv.toFixed(2)); gold.style.setProperty('--ps', st.ps.toFixed(3)); N.textContent = String(Math.round(st.lv)).padStart(3, '0'); }
   var fonts = Promise.race([document.fonts && document.fonts.load ? document.fonts.load('900 100px "Display"') : Promise.resolve(), new Promise(function (r) { setTimeout(r, 1000); })]);
@@ -443,7 +443,7 @@ function loader() {
       .to([ink, fill], { scale: 90, duration: 1.35, ease: 'expo.in' }, 2.95)
       .to(fill, { opacity: 0, duration: .5, ease: 'power2.in' }, 3.3)
       .add(function () { lock(false); res(); }, 3.35)
-      .to(['.nav', '.ctrl'], { autoAlpha: 1, duration: .9, ease: 'power2.out', clearProps: 'opacity,visibility' }, 3.55)
+      .to(['.nav', '.ctrl', '.ai-fab'], { autoAlpha: 1, duration: .9, ease: 'power2.out', clearProps: 'opacity,visibility' }, 3.55)
       .set(ink, { autoAlpha: 0 }, 4.3);
   }); });
 }
